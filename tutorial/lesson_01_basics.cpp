@@ -22,6 +22,14 @@
 // We'll also include stdio for printf.
 #include <stdio.h>
 
+// Include some support code for loading pngs.
+#include "halide_image_io.h"
+
+
+
+using namespace Halide;
+
+
 int main(int argc, char **argv) {
 
     // This program defines a single-stage imaging pipeline that
@@ -67,6 +75,14 @@ int main(int argc, char **argv) {
     // imaging pipeline. We're meta-programming. This C++ program is
     // constructing a Halide program in memory. Actually computing
     // pixel data comes next.
+    
+
+    //Clamp it to be less than 255, so we don't get overflow when we
+    //cast it back to an 8-bit unsigned int.
+    //gradient = Halide::min(gradient, 255.0f);
+    //Cast it back to an 8-bit unsigned integer.
+    //gradient = Halide::cast<uint8_t>(gradient)
+
 
     // Now we 'realize' the Func, which JIT compiles some code that
     // implements the pipeline we've defined, and then runs it.  We
@@ -75,7 +91,15 @@ int main(int argc, char **argv) {
     // resolution of the output image. Halide.h also provides a basic
     // templatized Image type we can use. We'll make an 800 x 600
     // image.
-    Halide::Image<int32_t> output = gradient.realize(800, 600);
+
+    gradient.trace_stores();
+
+    Halide::Image<uint8_t> out;
+    Halide::Tools::convert
+
+    Halide::Image<int32_t> output = gradient.realize(100, 100);
+    //Halide::Image<uint8_t> output = gradient.realize(800, 600);
+    
 
     // Halide does type inference for you. Var objects represent
     // 32-bit integers, so the Expr object 'x + y' also represents a
@@ -83,21 +107,27 @@ int main(int argc, char **argv) {
     // so we got a 32-bit signed integer image out when we call
     // 'realize'. Halide types and type-casting rules are equivalent
     // to C.
+   
 
     // Let's check everything worked, and we got the output we were
     // expecting:
-    for (int j = 0; j < output.height(); j++) {
-        for (int i = 0; i < output.width(); i++) {
-            // We can access a pixel of an Image object using similar
-            // syntax to defining and using functions.
-            if (output(i, j) != i + j) {
-                printf("Something went wrong!\n"
-                       "Pixel %d, %d was supposed to be %d, but instead it's %d\n",
-                       i, j, i+j, output(i, j));
-                return -1;
-            }
-        }
-    }
+    //for (int j = 0; j < output.height(); j++) {
+        //for (int i = 0; i < output.width(); i++) {
+            //// We can access a pixel of an Image object using similar
+            //// syntax to defining and using functions.
+            //if (output(i, j) != i + j) {
+                //printf("Something went wrong!\n"
+                       //"Pixel %d, %d was supposed to be %d, but instead it's %d\n",
+                       //i, j, i+j, output(i, j));
+                //return -1;
+            //}
+        //}
+    //}
+
+
+    // Save the output for inspection. It should look like a bright parrot.
+    printf("trying to save gradient.png !\n");
+    Halide::Tools::save_image(output, "gradient.png");
 
     // Everything worked! We defined a Func, then called 'realize' on
     // it to generate and run machine code that produced an Image.

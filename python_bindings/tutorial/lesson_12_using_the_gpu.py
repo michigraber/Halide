@@ -41,6 +41,7 @@ x, y, c, i = Var("x"), Var("y"), Var("c"), Var("i")
 class MyPipeline:
 
     def __init__(self, input):
+        """ blabljlkadsf """
 
         assert type(input) == Image_uint8
 
@@ -50,7 +51,6 @@ class MyPipeline:
         self.sharpen = Func("sharpen")
         self.curved = Func("curved")
         self.input = input
-
 
         # For this lesson, we'll use a two-stage pipeline that sharpens
         # and then applies a look-up-table (LUT).

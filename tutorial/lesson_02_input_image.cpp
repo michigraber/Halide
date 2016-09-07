@@ -1,7 +1,15 @@
 // Halide tutorial lesson 2: Processing images
 
-// This lesson demonstrates how to pass in input images and manipulate
-// them.
+// This lesson demonstrates how to pass in input images and manipulate them.
+
+
+//
+// docker container halide_anaconda
+// g++ lesson_02*.cpp -g -I /opt/include -I ../tools -L /opt/lib -lHalide `libpng-config --cflags --ldflags` -lpthread -ldl -o lesson_02 -std=c++11
+// LD_LIBRARY_PATH=/opt/lib ./lesson_02
+//
+// 
+
 
 // On linux, you can compile and run it like so:
 // g++ lesson_02*.cpp -g -I ../include -I ../tools -L ../bin -lHalide `libpng-config --cflags --ldflags` -lpthread -ldl -o lesson_02 -std=c++11
